@@ -3,7 +3,7 @@
 public function csv_gen($data_array,$char_code){
     try {
         //一時ファイルの用意
-        $csvFileName = '/tmp/' . time() . rand() . '.csv';
+        $csvFileName = fopen('php://temp/maxmemory:'. (5*1024*1024), 'w');
         $res = fopen($csvFileName, 'w');
         if ($res === FALSE) {
             throw new Exception('ファイルの書き込みに失敗しました。');
