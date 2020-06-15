@@ -1,6 +1,6 @@
 <?php
-//毎回忘れる
-public function csv_gen($data_array,$user_id){
+//配列と文字コードを渡してCSV出力
+public function csv_gen($data_array,$char_code){
     try {
         //一時ファイルの用意
         $csvFileName = '/tmp/' . time() . rand() . '.csv';
