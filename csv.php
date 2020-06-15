@@ -4,25 +4,22 @@ public function csv_gen($data_array,$char_code){
     try {
         //一時ファイルの用意
         $csvFileName = fopen('php://temp/maxmemory:'. (5*1024*1024), 'w');
-        $res = fopen($csvFileName, 'w');
-        if ($res === FALSE) {
+        if ($csvFileName === FALSE) {
             throw new Exception('ファイルの書き込みに失敗しました。');
         }
         $dataList = $data_array;
         foreach($dataList as $dataInfo) {
             //文字コード変換
-            mb_convert_variables('SJIS', 'UTF-8', $dataInfo);
-            fputcsv($res, $dataInfo);
+            mb_convert_encoding($dataInfo, $char_code,'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN,SJIS');
+            fputcsv($csvFileName, $dataInfo);
         }
-        $fname = date('Y-m-d').'-'.'myname';
+        $filename = "";
+        $filename = date('Y-m-d').'.csv';
         // ハンドル閉じる
-        fclose($res);
-        //ダウンロード
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.$fname.'.csv');
-        header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . filesize($csvFileName));
-        readfile($csvFileName);
+        fclose($csvFileName);
+        rewind($csvFileName);
+        file_put_contents($filename, stream_get_contents($csvFileName));
+        fclose($csvFileName);
     } catch(Exception $e) {
         // 例外
         echo $e->getMessage();
